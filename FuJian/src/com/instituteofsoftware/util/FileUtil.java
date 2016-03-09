@@ -120,4 +120,9 @@ public class FileUtil {
 		FileUtil out = new FileUtil("test.txt",true);
 		out.writeLine("adasf");
 	}
+	
+	
+	
+	
+	
 }

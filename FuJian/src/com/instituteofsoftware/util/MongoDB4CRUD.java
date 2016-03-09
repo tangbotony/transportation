@@ -62,7 +62,7 @@ public class MongoDB4CRUD {
 	 * @author hoojo
 	 * @createDate 2011-6-2 下午03:22:40
 	 */
-	private void queryAll() {
+	public void queryAll() {
 		print("查询users的所有数据：");
 		//db游标
 		DBCursor cur = collections.find();

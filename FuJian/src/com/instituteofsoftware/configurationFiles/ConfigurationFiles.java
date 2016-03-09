@@ -13,9 +13,9 @@ public class ConfigurationFiles {
 	
 	public static final int MONGODBPORT = 27017;
 	public static final int FILESIZE = 6392;//该值是在处理原始GPS数据时定义的文件大小，如果文件小于这个值，则不需要处理 6K
-	public static MongoDB4CRUD mongoDB4CRUDTaxiInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "beijin", "taxiInformation");
+	public static MongoDB4CRUD mongoDB4CRUDTaxiInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "fujian", "oldRoadInformation");
 	//roadInformation
-	public static MongoDB4CRUD mongoDB4CRUDRoadInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "beijin", "roadInformation");
+	public static MongoDB4CRUD mongoDB4CRUDRoadInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "fujian", "roadInformation");
 
 	public static double FLAG = -1;
 }
