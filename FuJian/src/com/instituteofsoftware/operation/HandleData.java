@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.instituteofsoftware.bean.Pline;
 import com.instituteofsoftware.bean.Point2;
 import com.instituteofsoftware.util.FileUtil;
 import com.instituteofsoftware.util.Util;
@@ -26,7 +27,8 @@ public class HandleData {
 		for(int i=0;i<files.length;i++)
 		{
 			System.out.println("第"+(i+1)+"个文件");
-			divideRoad(files[i]);
+			getNewRoadSE(files[i]);
+//			divideRoad(files[i]);
 		}
 	}
 	
@@ -118,6 +120,7 @@ public class HandleData {
 		ArrayList<Point2> tempList;
 		for(int i=0;i<index;i++)
 		{
+			System.out.println(newRoad.get(i));
 			String line[] = newRoad.get(i).split("\t");
 			tempList = new ArrayList<Point2>();
 			for(int j=0;j<line.length;j++)
@@ -152,6 +155,78 @@ public class HandleData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * 获取新划分的路的起点和终点
+	 */
+	public static ArrayList<Pline> getNewRoadSE(String fileName)
+	{
+		ArrayList<Pline> allRoad = new ArrayList<Pline>();
+		FileUtil road = new FileUtil(fileName);
+		String temp = road.readLine();
+		Pline tempPline = null;
+		String beforPline="";
+		while(temp!=null)
+		{
+			String lineInformation[] = temp.split("\t");
+			if(tempPline == null)
+			{
+				tempPline = new Pline();
+				tempPline.setStartNILink(lineInformation[0]);
+				tempPline.setStartPoint(new Point2(Double.parseDouble(lineInformation[3]), Double.parseDouble(lineInformation[4])));
+				tempPline.setDis(Double.parseDouble(lineInformation[2]));
+				tempPline.setDirection(lineInformation[1]);
+				tempPline.setContainNILink(lineInformation[0]);
+			}else
+			{
+				if(!lineInformation[1].equals(tempPline.getDirection()))//换向
+				{
+					String befor[] = beforPline.split("\t");
+					tempPline.setEndNILink(befor[0]);
+					tempPline.setEndPoint(new Point2(Double.parseDouble(befor[5]), Double.parseDouble(befor[6])));
+					allRoad.add(tempPline);
+					tempPline = null;
+					continue;
+				}else
+				{
+					if(ringRoadPoint.get(lineInformation[5]+"#"+lineInformation[6])==null)//判断是不是分割点
+					{
+						tempPline.setDis(Double.parseDouble(lineInformation[2])+tempPline.getDis());
+						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
+					}else
+					{
+						tempPline.setEndNILink(lineInformation[0]);
+						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
+						tempPline.setEndPoint(new Point2(Double.parseDouble(lineInformation[5]), Double.parseDouble(lineInformation[6])));
+						tempPline.setDis(Double.parseDouble(lineInformation[2])+tempPline.getDis());
+						allRoad.add(tempPline);
+						tempPline = null;
+					}
+				}
+			}
+			beforPline = temp;
+			temp = road.readLine();
+		}
+		StringBuffer re = new StringBuffer();
+		for(int i=0;i<allRoad.size();i++)
+		{
+			re.append(allRoad.get(i).toString());
+			re.append("\n");
+		}
+		FileWriter writer;
+		try {
+			System.out.println(fileName);
+			String fileNmaes[] = fileName.split("\\.");
+			Util.createFile(fileNmaes[0]+"_new.txt");
+			writer = new FileWriter(fileNmaes[0]+"_new.txt", false);
+			writer.write(re.toString());  
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return allRoad;
 	}
 }
 
