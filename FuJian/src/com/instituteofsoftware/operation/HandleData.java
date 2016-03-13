@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.instituteofsoftware.bean.Pline;
 import com.instituteofsoftware.bean.Point2;
+import com.instituteofsoftware.bean.VehicleInsp;
 import com.instituteofsoftware.util.FileUtil;
 import com.instituteofsoftware.util.Util;
 
@@ -16,6 +17,10 @@ public class HandleData {
 	public static Map<String, List<Point2>> map = new HashMap<String, List<Point2>>();// ring road;
 	public static Map<String, List<Point2>> ringRoadMap = new HashMap<String, List<Point2>>();
 	public static Map<String, Boolean> ringRoadPoint = new HashMap<String, Boolean>();
+	public static Map<String, ArrayList<Pline>> allRoadInformation = new HashMap<String, ArrayList<Pline>>();//存放每一条路的所有信息
+	public static Map<String, ArrayList<VehicleInsp>> allVehicleInsps = new HashMap<String, ArrayList<VehicleInsp>>();//存放每一条路的车检器
+	public static StringBuffer error = new StringBuffer();
+	public static double maxDis = 1.3;
 	public static boolean isRecoder = false;
 	public static String files[] ={"G3.txt","G15.txt","G1501.txt","G1514.txt","G70.txt","G72.txt","G76.txt","S35.txt","G25.txt",};
 	public static void main(String[] args) {
@@ -27,11 +32,85 @@ public class HandleData {
 		for(int i=0;i<files.length;i++)
 		{
 			System.out.println("第"+(i+1)+"个文件");
+			 
 			getNewRoadSE(files[i]);
 //			divideRoad(files[i]);
 		}
+		divideVehicleInspection();
+		Util.write2File("err.txt", error.toString());
 	}
 	
+	private static void divideVehicleInspection() {
+		FileUtil fileUtil = new FileUtil("vehicleinspection0324.txt");
+		String temp = fileUtil.readLine();
+		StringBuffer buffer = new StringBuffer();
+		while(temp!=null)
+		{
+			VehicleInsp vel = new VehicleInsp(temp);
+			if(allVehicleInsps.get(vel.getRoadLine())==null)
+				allVehicleInsps.put(vel.getRoadLine(), new ArrayList<VehicleInsp>());
+			ArrayList<VehicleInsp> tempList = allVehicleInsps.get(vel.getRoadLine());
+			tempList.add(vel);
+			vel.setPline(getPlineBy(vel));
+			buffer.append(vel.toString());
+			buffer.append("\n");
+			if(vel.getPline()==null)
+			{
+				error.append(vel);
+				error.append("\n");
+			}
+			allVehicleInsps.put(vel.getRoadLine(),tempList);
+			temp = fileUtil.readLine();
+		}
+		Util.write2File("test.txt", buffer.toString());
+	}
+
+	private static Pline getPlineBy(VehicleInsp vel) {
+		Pline tempPline = null;
+		ArrayList<Pline> plines = allRoadInformation.get(vel.getRoadLine());
+		if(plines==null)
+		{
+			System.out.println(vel);
+			System.exit(0);
+		}
+		for(int i=0;i<plines.size();i++)
+		{
+			Point2 projectivePoint = getProjPoint(plines.get(i),vel);
+			if(projectivePoint.getX()>plines.get(i).getStartPoint().getX()
+					&& projectivePoint.getX()<plines.get(i).getEndPoint().getX()
+					&& projectivePoint.getY()>plines.get(i).getStartPoint().getY()
+					&& projectivePoint.getY()<plines.get(i).getEndPoint().getY())
+			{
+				tempPline = plines.get(i);
+				break;
+			}
+			
+			
+			if(projectivePoint.getX()>plines.get(i).getEndPoint().getX()
+					&& projectivePoint.getX()<plines.get(i).getStartPoint().getX()
+					&& projectivePoint.getY()>plines.get(i).getEndPoint().getY()
+					&& projectivePoint.getY()<plines.get(i).getStartPoint().getY())
+			{
+				tempPline = plines.get(i);
+				break;
+			}
+		}
+		return tempPline;
+	}
+
+	private static Point2 getProjPoint(Pline pline, VehicleInsp vel) {
+		Point2 p0 = new Point2();
+		Point2 p1 = pline.getStartPoint();
+		Point2 p2 = pline.getEndPoint();
+		Point2 p3 = vel.getGpsPoint();
+		// k = |P0-P1|/|P2-P1| = ( (v1*v2)/|P2-P1| ) / |P2-P1| = (P3 - P1) * (P2   - P1) / (|P2 - P1| * |P2 - P1|)
+		double k = ((p3.getX()-p1.getX())*(p2.getX()-p1.getX())+(p3.getY()-p1.getY())*(p2.getY()-p1.getY()))/
+				((p2.getX()-p1.getX())*(p2.getX()-p1.getX())+(p2.getY()-p1.getY())*(p2.getY()-p1.getY()));
+		p0.setX(k*(p2.getX()-p1.getX())+p1.getX());
+		p0.setY(k*(p2.getY()-p1.getY())+p1.getY());
+		return p0;
+	}
+
 	/**
 	 * 读取一个mif文件中下一个NILink的详细gps点，有效的保存在roadGPS中
 	 * @param fin
@@ -162,6 +241,7 @@ public class HandleData {
 	 */
 	public static ArrayList<Pline> getNewRoadSE(String fileName)
 	{
+		String fileNames[] = fileName.split("\\.");
 		ArrayList<Pline> allRoad = new ArrayList<Pline>();
 		FileUtil road = new FileUtil(fileName);
 		String temp = road.readLine();
@@ -185,6 +265,7 @@ public class HandleData {
 					String befor[] = beforPline.split("\t");
 					tempPline.setEndNILink(befor[0]);
 					tempPline.setEndPoint(new Point2(Double.parseDouble(befor[5]), Double.parseDouble(befor[6])));
+					tempPline.setRoadID(fileNames[0]+"#"+tempPline.getStartNILink()+"#"+tempPline.getEndNILink());
 					allRoad.add(tempPline);
 					tempPline = null;
 					continue;
@@ -200,6 +281,7 @@ public class HandleData {
 						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
 						tempPline.setEndPoint(new Point2(Double.parseDouble(lineInformation[5]), Double.parseDouble(lineInformation[6])));
 						tempPline.setDis(Double.parseDouble(lineInformation[2])+tempPline.getDis());
+						tempPline.setRoadID(fileNames[0]+"#"+tempPline.getStartNILink()+"#"+tempPline.getEndNILink());
 						allRoad.add(tempPline);
 						tempPline = null;
 					}
@@ -216,16 +298,14 @@ public class HandleData {
 		}
 		FileWriter writer;
 		try {
-			System.out.println(fileName);
-			String fileNmaes[] = fileName.split("\\.");
-			Util.createFile(fileNmaes[0]+"_new.txt");
-			writer = new FileWriter(fileNmaes[0]+"_new.txt", false);
+			Util.createFile(fileNames[0]+"_new.txt");
+			writer = new FileWriter(fileNames[0]+"_new.txt", false);
 			writer.write(re.toString());  
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		allRoadInformation.put(fileNames[0], allRoad);
 		return allRoad;
 	}
 }

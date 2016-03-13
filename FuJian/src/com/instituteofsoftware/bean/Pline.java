@@ -1,6 +1,7 @@
 package com.instituteofsoftware.bean;
 
 public class Pline {
+	private String roadID;
 	private String startNILink;
 	private String endNILink;
 	private String direction;
@@ -54,10 +55,16 @@ public class Pline {
 	public void setContainNILink(String containNILink) {
 		this.containNILink = containNILink;
 	}
+	public String getRoadID() {
+		return roadID;
+	}
+	public void setRoadID(String roadID) {
+		this.roadID = roadID;
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return startNILink+"\t"+endNILink+"\t"+direction+"\t"+dis+"\t"+startPoint.toString()+"\t"+endPoint.toString()+"\t"+containNILink;
+		return roadID+"\t"+startNILink+"\t"+endNILink+"\t"+direction+"\t"+dis+"\t"+startPoint.toString()+"\t"+endPoint.toString()+"\t"+containNILink;
 		//		return containNILink;
 		//return startPoint.toString()+"\t"+endPoint.toString();
 		//return startNILink+"\t"+endNILink+"\t"+dis+"";
