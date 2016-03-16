@@ -14,15 +14,23 @@ import com.instituteofsoftware.util.FileUtil;
 import com.instituteofsoftware.util.Util;
 
 public class HandleData {
+	public static String fileDate="20151112";
+	public static String filePath="F:/Data/unzip/"+fileDate+"/";
+	public static String recoderFileName=fileDate+".txt";
+	public static int countSize = 0;
+	public static int timeGap = 60;
 	public static Map<String, List<Point2>> map = new HashMap<String, List<Point2>>();// ring road;
 	public static Map<String, List<Point2>> ringRoadMap = new HashMap<String, List<Point2>>();
 	public static Map<String, Boolean> ringRoadPoint = new HashMap<String, Boolean>();
-	public static Map<String, ArrayList<Pline>> allRoadInformation = new HashMap<String, ArrayList<Pline>>();//存放每一条路的所有信息
+	public static Map<String, ArrayList<Pline>> allRoadInformation = new HashMap<String, ArrayList<Pline>>();//存放每一条路的所有信息, key:G70
 	public static Map<String, ArrayList<VehicleInsp>> allVehicleInsps = new HashMap<String, ArrayList<VehicleInsp>>();//存放每一条路的车检器
+	public static Map<String, Pline> staticFlow = new HashMap<String,Pline>();//key: G70#starID#endID
 	public static StringBuffer error = new StringBuffer();
-	public static double maxDis = 1.3;
+	public static double maxDis = 4;
 	public static boolean isRecoder = false;
-	public static String files[] ={"G3.txt","G15.txt","G1501.txt","G1514.txt","G70.txt","G72.txt","G76.txt","S35.txt","G25.txt",};
+	public static String files[] ={"G3.txt","G15.txt","G1501.txt","G1514.txt","G70.txt","G72.txt","G76.txt","S35.txt","G25.txt"};
+	public static String roads[] ={"G3","G15","G1501","G1514","G70","G72","G76","S35","G25"};
+	
 	public static void main(String[] args) {
 		isRecoder = false;
 		getLinkGPS(map,"Rfujian.mif","Rfujian.mid");//读取正常的道路
@@ -32,12 +40,14 @@ public class HandleData {
 		for(int i=0;i<files.length;i++)
 		{
 			System.out.println("第"+(i+1)+"个文件");
-			 
 			getNewRoadSE(files[i]);
 //			divideRoad(files[i]);
 		}
 		divideVehicleInspection();
-		Util.write2File("err.txt", error.toString());
+//		Util.write2File("err.txt", error.toString())；
+		StatisticsData.statis();
+		SignallingStatistics.signallingStatistics();
+		Output2File.wirte();
 	}
 	
 	private static void divideVehicleInspection() {
@@ -50,22 +60,45 @@ public class HandleData {
 			if(allVehicleInsps.get(vel.getRoadLine())==null)
 				allVehicleInsps.put(vel.getRoadLine(), new ArrayList<VehicleInsp>());
 			ArrayList<VehicleInsp> tempList = allVehicleInsps.get(vel.getRoadLine());
-			tempList.add(vel);
-			vel.setPline(getPlineBy(vel));
-			buffer.append(vel.toString());
-			buffer.append("\n");
+			vel.setPline(getPlineBy(vel,false));
+			if(vel.getPline()!=null)
+			{
+				if(vel.getChannel().equals("1") || vel.getChannel().equals("3") || vel.getChannel().equals("5") || vel.getChannel().equals("7"))//代表的是正方向
+				{
+					if(!vel.getPline().getDirection().equals("0"))
+					{
+						Pline pline1 =getPlineBy(vel,true);
+						if(pline1!=null)
+							vel.setPline(pline1);//获取对面的道路来作为投影路段
+					}
+				}else
+				{
+					if(!vel.getPline().getDirection().equals("1"))
+					{
+						Pline pline1 =getPlineBy(vel,true);
+						if(pline1!=null)
+							vel.setPline(getPlineBy(vel,true));
+					}
+				}
+				tempList.add(vel);
+				allVehicleInsps.put(vel.getRoadLine(),tempList);
+				buffer.append(vel.toString());
+				buffer.append("\n");
+			}
+//			vel.setPline2(getPlineBy(vel,true));查判断
 			if(vel.getPline()==null)
 			{
 				error.append(vel);
 				error.append("\n");
 			}
-			allVehicleInsps.put(vel.getRoadLine(),tempList);
 			temp = fileUtil.readLine();
 		}
 		Util.write2File("test.txt", buffer.toString());
 	}
 
-	private static Pline getPlineBy(VehicleInsp vel) {
+	private static Pline getPlineBy(VehicleInsp vel,boolean flag) {
+		if(flag == true && vel.getPline()==null)//代表第一次道路匹配为空，第二次不需要在进行匹配
+			return null;
 		Pline tempPline = null;
 		ArrayList<Pline> plines = allRoadInformation.get(vel.getRoadLine());
 		if(plines==null)
@@ -73,43 +106,38 @@ public class HandleData {
 			System.out.println(vel);
 			System.exit(0);
 		}
+		double curDis=Double.MAX_VALUE;
 		for(int i=0;i<plines.size();i++)
 		{
-			Point2 projectivePoint = getProjPoint(plines.get(i),vel);
-			if(projectivePoint.getX()>plines.get(i).getStartPoint().getX()
-					&& projectivePoint.getX()<plines.get(i).getEndPoint().getX()
-					&& projectivePoint.getY()>plines.get(i).getStartPoint().getY()
-					&& projectivePoint.getY()<plines.get(i).getEndPoint().getY())
+			Point2 projectivePoint = Util.getProjPoint(plines.get(i),vel.getGpsPoint());
+			if(projectivePoint.getX()>plines.get(i).getStartPoint().getX() && projectivePoint.getX()<plines.get(i).getEndPoint().getX()
+					|| projectivePoint.getX()>plines.get(i).getEndPoint().getX() && projectivePoint.getX()<plines.get(i).getStartPoint().getX())
 			{
-				tempPline = plines.get(i);
-				break;
+				if((Util.GetDistance(projectivePoint, vel.getGpsPoint())/1000)<curDis)//加上距离约束
+				{
+					if(flag)//代表寻找另一边的道路
+					{
+						if(!plines.get(i).getRoadID().equals(vel.getPline().getRoadID()))
+						{
+							tempPline = plines.get(i);
+							curDis = Util.GetDistance(projectivePoint, vel.getGpsPoint())/1000;
+						}
+					}else
+					{
+						tempPline = plines.get(i);
+						curDis = Util.GetDistance(projectivePoint, vel.getGpsPoint())/1000;
+					}
+				}
 			}
-			
-			
-			if(projectivePoint.getX()>plines.get(i).getEndPoint().getX()
-					&& projectivePoint.getX()<plines.get(i).getStartPoint().getX()
-					&& projectivePoint.getY()>plines.get(i).getEndPoint().getY()
-					&& projectivePoint.getY()<plines.get(i).getStartPoint().getY())
-			{
-				tempPline = plines.get(i);
-				break;
-			}
+		}
+		if( !flag && curDis>maxDis)//第二条线不需要加入距离判断，程序能够运行到这，证明第一条能够匹配
+		{
+			tempPline=null;
 		}
 		return tempPline;
 	}
 
-	private static Point2 getProjPoint(Pline pline, VehicleInsp vel) {
-		Point2 p0 = new Point2();
-		Point2 p1 = pline.getStartPoint();
-		Point2 p2 = pline.getEndPoint();
-		Point2 p3 = vel.getGpsPoint();
-		// k = |P0-P1|/|P2-P1| = ( (v1*v2)/|P2-P1| ) / |P2-P1| = (P3 - P1) * (P2   - P1) / (|P2 - P1| * |P2 - P1|)
-		double k = ((p3.getX()-p1.getX())*(p2.getX()-p1.getX())+(p3.getY()-p1.getY())*(p2.getY()-p1.getY()))/
-				((p2.getX()-p1.getX())*(p2.getX()-p1.getX())+(p2.getY()-p1.getY())*(p2.getY()-p1.getY()));
-		p0.setX(k*(p2.getX()-p1.getX())+p1.getX());
-		p0.setY(k*(p2.getY()-p1.getY())+p1.getY());
-		return p0;
-	}
+	
 
 	/**
 	 * 读取一个mif文件中下一个NILink的详细gps点，有效的保存在roadGPS中
@@ -277,13 +305,19 @@ public class HandleData {
 						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
 					}else
 					{
-						tempPline.setEndNILink(lineInformation[0]);
-						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
-						tempPline.setEndPoint(new Point2(Double.parseDouble(lineInformation[5]), Double.parseDouble(lineInformation[6])));
 						tempPline.setDis(Double.parseDouble(lineInformation[2])+tempPline.getDis());
-						tempPline.setRoadID(fileNames[0]+"#"+tempPline.getStartNILink()+"#"+tempPline.getEndNILink());
-						allRoad.add(tempPline);
-						tempPline = null;
+						if(tempPline.getDis()<2)
+						{
+							tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
+						}else
+						{
+							tempPline.setEndNILink(lineInformation[0]);
+							tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);
+							tempPline.setEndPoint(new Point2(Double.parseDouble(lineInformation[5]), Double.parseDouble(lineInformation[6])));
+							tempPline.setRoadID(fileNames[0]+"#"+tempPline.getStartNILink()+"#"+tempPline.getEndNILink());
+							allRoad.add(tempPline);
+							tempPline = null;
+						}
 					}
 				}
 			}
@@ -291,6 +325,7 @@ public class HandleData {
 			temp = road.readLine();
 		}
 		StringBuffer re = new StringBuffer();
+		countSize = countSize +allRoad.size();
 		for(int i=0;i<allRoad.size();i++)
 		{
 			re.append(allRoad.get(i).toString());
@@ -309,6 +344,3 @@ public class HandleData {
 		return allRoad;
 	}
 }
-
-
-

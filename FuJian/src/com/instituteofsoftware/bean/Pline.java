@@ -1,6 +1,10 @@
 package com.instituteofsoftware.bean;
 
+import java.util.ArrayList;
+
 public class Pline {
+	private double a;
+	private double b;
 	private String roadID;
 	private String startNILink;
 	private String endNILink;
@@ -9,6 +13,8 @@ public class Pline {
 	private Point2 startPoint;
 	private Point2 endPoint;
 	private String containNILink;
+	private ArrayList<Integer> forward;
+	private ArrayList<Integer> reverse;
 	
 	public Pline() {
 		super();
@@ -60,6 +66,30 @@ public class Pline {
 	}
 	public void setRoadID(String roadID) {
 		this.roadID = roadID;
+	}
+	public ArrayList<Integer> getForward() {
+		return forward;
+	}
+	public void setForward(ArrayList<Integer> forward) {
+		this.forward = forward;
+	}
+	public ArrayList<Integer> getReverse() {
+		return reverse;
+	}
+	public void setReverse(ArrayList<Integer> reverse) {
+		this.reverse = reverse;
+	}
+	public double getA() {
+		return a;
+	}
+	public void setA(double a) {
+		this.a = a;
+	}
+	public double getB() {
+		return b;
+	}
+	public void setB(double b) {
+		this.b = b;
 	}
 	@Override
 	public String toString() {

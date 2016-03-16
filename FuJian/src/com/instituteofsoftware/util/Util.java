@@ -3,9 +3,11 @@ package com.instituteofsoftware.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.instituteofsoftware.bean.Pline;
 import com.instituteofsoftware.bean.Point2;
 
 
@@ -34,7 +36,9 @@ public class Util {
 		s = Math.round(s * 10000) / 10000;
 		return s;
 	}
-	
+	/*
+	 * 这个公式得出的距离是按米计算
+	 */
 	public static double GetDistance(Point2 pointStar,Point2 pointEnd)
 	{
 		//longitude 经度 x;  latitude 纬度 y;
@@ -54,8 +58,19 @@ public class Util {
 		return s;
 	}
 
-	
-	
+	//获取点在线上的投影点
+	public static Point2 getProjPoint(Pline pline, Point2 point) {
+		Point2 p0 = new Point2();
+		Point2 p1 = pline.getStartPoint();
+		Point2 p2 = pline.getEndPoint();
+		Point2 p3 = point;
+		// k = |P0-P1|/|P2-P1| = ( (v1*v2)/|P2-P1| ) / |P2-P1| = (P3 - P1) * (P2   - P1) / (|P2 - P1| * |P2 - P1|)
+		double k = ((p3.getX()-p1.getX())*(p2.getX()-p1.getX())+(p3.getY()-p1.getY())*(p2.getY()-p1.getY()))/
+				((p2.getX()-p1.getX())*(p2.getX()-p1.getX())+(p2.getY()-p1.getY())*(p2.getY()-p1.getY()));
+		p0.setX(k*(p2.getX()-p1.getX())+p1.getX());
+		p0.setY(k*(p2.getY()-p1.getY())+p1.getY());
+		return p0;
+	}
 	
 	
 	
@@ -63,6 +78,17 @@ public class Util {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 		return df.format(new Date());// new Date()为获取当前系统时间
 
+	}
+	public static Date getDateByString(String trmp)
+	{
+		SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		try {
+			return sdf.parse(trmp);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	public static void createFile(String fileName) {
 		File ceateFile =new File(fileName);    
