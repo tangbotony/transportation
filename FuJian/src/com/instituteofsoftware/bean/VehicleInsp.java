@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 //G15	1884	5	922	2302020	118.09851	24.64742277
 public class VehicleInsp {
-	private String roadLine; //Â·Ïß±àºÅ
-	private String placeKM; //×®ºÅ
-	private String channel; //ÏßÈ¦ËùÔÚ³µµÀ
-	private String coilID; //ÏßÈ¦ID
-	private String controllerID; //¿ØÖÆÆ÷ID
-	private Point2 gpsPoint;//ÏßÈ¦µÄGPSµã
+	private String roadLine; //è·¯çº¿ç¼–å·
+	private String placeKM; //æ¡©å·
+	private String channel; //çº¿åœˆæ‰€åœ¨è½¦é“
+	private String coilID; //çº¿åœˆID
+	private String controllerID; //æ§åˆ¶å™¨ID
+	private Point2 gpsPoint;//çº¿åœˆçš„GPSç‚¹
 	private Pline pline;
 	private ArrayList<Integer> forward;
 	private ArrayList<Integer> reverse;

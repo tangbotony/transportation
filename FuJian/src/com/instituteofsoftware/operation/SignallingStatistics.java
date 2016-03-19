@@ -16,30 +16,30 @@ import com.instituteofsoftware.util.Util;
 
 public class SignallingStatistics {
 	/*
-	 * ¿ªÊ¼Ô¤²â£º
-Ô¤²â½áÊø
-Ô¤²âµÀÂ·Êı£º196
+	 * å¼€å§‹é¢„æµ‹ï¼š
+é¢„æµ‹ç»“æŸ
+é¢„æµ‹é“è·¯æ•°ï¼š196
 	 */
 	public static int minSignalling = 4;
-	public static int empty=0;//Ğ¡ÓÚ
-	public static int can=0;//×îÖÕ¿ÉÓÃÊı¾İ
-	public static int timegap = 4;//Ê±¼ä¼ä¸ô4Ğ¡Ê±
+	public static int empty=0;//å°äº
+	public static int can=0;//æœ€ç»ˆå¯ç”¨æ•°æ®
+	public static int timegap = 4;//æ—¶é—´é—´éš”4å°æ—¶
 	public static int notOnRoad =0;
-	public static ArrayList<Signalling> allSignallings = new ArrayList<>();//ËùÓĞµÄ»ùÕ¾
-	public static Map<String, String> cellMatching = new HashMap<String,String>();//key:cellId#lacId; ¸ù¾İkeyµÃµ½Æ¥ÅäµÄµÀÂ·id
-	public static Map<String,ArrayList<Signalling>> roalSignalling = new HashMap<>();//key: roadID  G70#startID#endID µÃµ½Õâ¶ÎÂ·ÉÏµÄ»ùÕ¾
+	public static ArrayList<Signalling> allSignallings = new ArrayList<>();//æ‰€æœ‰çš„åŸºç«™
+	public static Map<String, String> cellMatching = new HashMap<String,String>();//key:cellId#lacId; æ ¹æ®keyå¾—åˆ°åŒ¹é…çš„é“è·¯id
+	public static Map<String,ArrayList<Signalling>> roalSignalling = new HashMap<>();//key: roadID  G70#startID#endID å¾—åˆ°è¿™æ®µè·¯ä¸Šçš„åŸºç«™
 	public static Map<String, Pline> allRoad = new HashMap<>();//key key: roadID  G70#startID#endID
-	public static Map<String, ArrayList<RecoderSignalling>> signallingStatistics = new HashMap<>();//´æ·ÅÃ¿Ò»¸öÓÃ»§µÄĞÅÁîÊı¾İ£¬key:MD5¼ÓÃÜµç»°ºÅÂë
+	public static Map<String, ArrayList<RecoderSignalling>> signallingStatistics = new HashMap<>();//å­˜æ”¾æ¯ä¸€ä¸ªç”¨æˆ·çš„ä¿¡ä»¤æ•°æ®ï¼Œkey:MD5åŠ å¯†ç”µè¯å·ç 
 	public static Map<String,Signalling> mapSignalling = new HashMap<>();//key  cell_id#Lac_id
 	public static String dataPath="F:/Data/unzip/20151112";
-	public static Map<String, ArrayList<Integer>> roadStatistics = new HashMap<String, ArrayList<Integer>>();//ĞÅÁîÍ³¼Æ£¬°´ÕÕÂ·¶ÎµÄidÀ´È¡ key  cell_id#Lac_id
+	public static Map<String, ArrayList<Integer>> roadStatistics = new HashMap<String, ArrayList<Integer>>();//ä¿¡ä»¤ç»Ÿè®¡ï¼ŒæŒ‰ç…§è·¯æ®µçš„idæ¥å– key  cell_id#Lac_id
 	
 	public static void signallingStatistics()
 	{
 		getAllRoad();
-		dealSignallingToRoad();//½«ËùÓĞµÄ»ùÕ¾¶ÁÈ¡¼ÓÈëÁĞ±í
-		matching();//½«ËùÓĞµÄ»ùÕ¾ºÍµÀÂ·½øĞĞÆ¥Åä
-		sort();//¸øÃ¿Ò»¶ÎµÀÂ·ÉÏµÄgpsÅÅĞò
+		dealSignallingToRoad();//å°†æ‰€æœ‰çš„åŸºç«™è¯»å–åŠ å…¥åˆ—è¡¨
+		matching();//å°†æ‰€æœ‰çš„åŸºç«™å’Œé“è·¯è¿›è¡ŒåŒ¹é…
+		sort();//ç»™æ¯ä¸€æ®µé“è·¯ä¸Šçš„gpsæ’åº
 		statistics();
 	}
 	@SuppressWarnings("deprecation")
@@ -48,11 +48,11 @@ public class SignallingStatistics {
 		for(int i=0;i<((24*60)/HandleData.timeGap);i++)
 		{
 			
-			System.out.println("µÚ"+i+"¸öĞ¡Ê±µÄ¿ªÊ¼´¦Àí£¡");
+			System.out.println("ç¬¬"+i+"ä¸ªå°æ—¶çš„å¼€å§‹å¤„ç†ï¼");
 			ArrayList<String> filesName = ReadFromTar.unpressData(HandleData.fileDate, i<10? "0"+i : i+"", HandleData.timeGap/60+"");
 			System.out.println(filesName.size());
 			System.out.println(filesName);
-			for(String file : filesName){//ºÏ²¢Í¬Ò»¸öÓÃ»§µÄÊı¾İ
+			for(String file : filesName){//åˆå¹¶åŒä¸€ä¸ªç”¨æˆ·çš„æ•°æ®
 				if(!new File(file).exists())
 					continue;
 				FileUtil fileUtil = new FileUtil(file);
@@ -71,19 +71,19 @@ public class SignallingStatistics {
 					temp = fileUtil.readLine();
 				}
 			}
-			System.out.println("µÚ"+i+"¸öĞ¡Ê±µÄ´¦Àí½áÊø£¡");
+			System.out.println("ç¬¬"+i+"ä¸ªå°æ—¶çš„å¤„ç†ç»“æŸï¼");
 			int count = 0;
-			System.out.println("×Ü¹²ÈËÊı£º"+signallingStatistics.size());
-			System.out.println("Í³¼Æ¿ªÊ¼....");
+			System.out.println("æ€»å…±äººæ•°ï¼š"+signallingStatistics.size());
+			System.out.println("ç»Ÿè®¡å¼€å§‹....");
 			for(Iterator<String> iterator = signallingStatistics.keySet().iterator(); iterator.hasNext();) {
 				String string = (String) iterator.next();
 				ArrayList<RecoderSignalling> list = signallingStatistics.get(string);
 				if(list.size()>=minSignalling)	
 				{
-					int starIndex = 0;//ĞÅÁîÊı¾İÀïÃæµÚÒ»¸öÄÜÆ¥ÅäÂ·¶ÎµÄÊı¾İµÄË÷Òı
-					int endIndex =0;//ĞÅÁîÊı¾İÀïÃæ×îºóÒ»¸öÄÜÆ¥ÅäÂ·¶ÎµÄÊı¾İµÄË÷Òı
-					int countSignalling = 0;//¼ÇÂ¼ÕâÌõĞÅÁîÊı¾İÀïÃæÓĞ¶àÉÙ¸öĞÅÁîÄÜ¹»½øĞĞÆ¥Åä
-					Signalling starSignalling = null;//»ñÈ¡ĞÅÁî¿ªÊ¼Ê±µÄ¶ÔÓ¦µÄ»ùÕ¾Êı¾İ
+					int starIndex = 0;//ä¿¡ä»¤æ•°æ®é‡Œé¢ç¬¬ä¸€ä¸ªèƒ½åŒ¹é…è·¯æ®µçš„æ•°æ®çš„ç´¢å¼•
+					int endIndex =0;//ä¿¡ä»¤æ•°æ®é‡Œé¢æœ€åä¸€ä¸ªèƒ½åŒ¹é…è·¯æ®µçš„æ•°æ®çš„ç´¢å¼•
+					int countSignalling = 0;//è®°å½•è¿™æ¡ä¿¡ä»¤æ•°æ®é‡Œé¢æœ‰å¤šå°‘ä¸ªä¿¡ä»¤èƒ½å¤Ÿè¿›è¡ŒåŒ¹é…
+					Signalling starSignalling = null;//è·å–ä¿¡ä»¤å¼€å§‹æ—¶çš„å¯¹åº”çš„åŸºç«™æ•°æ®
 					for(int m=0;m<list.size();m++)
 					{
 						if(mapSignalling.get(list.get(m).getCellID()+"#"+list.get(m).getLac())!=null)
@@ -95,7 +95,7 @@ public class SignallingStatistics {
 						}
 						
 					}
-					Signalling endSignalling = null;//»ñÈ¡ĞÅÁî½áÊøÊ±¶ÔÓ¦µÄ»ùÕ¾Êı¾İ
+					Signalling endSignalling = null;//è·å–ä¿¡ä»¤ç»“æŸæ—¶å¯¹åº”çš„åŸºç«™æ•°æ®
 					for(int m=starIndex+1;m<list.size();m++)
 					{
 						if(mapSignalling.get(list.get(m).getCellID()+"#"+list.get(m).getLac())!=null)
@@ -110,32 +110,32 @@ public class SignallingStatistics {
 					{
 						System.out.println("index:"+starIndex);
 						System.out.println("list.size():"+list.size());
-						System.out.println("¸ÃÓÃ»§²»¿ÉÓÃ£º"+list);
+						System.out.println("è¯¥ç”¨æˆ·ä¸å¯ç”¨ï¼š"+list);
 						empty++;
 						continue;
 					}
 					can++;
-					Pline tempPline = starSignalling.getPline1();//µÃµ½ĞÅÁî¶ÔÓ¦µÄ»ùÕ¾µÄ×î½üµÄÄÇÌõÓ³ÉäµÄÂ·¶Î
-					Point2 startPoint = tempPline.getStartPoint();//»ñÈ¡ÕâÌõÂ·µÄÒ»¸ö¶Ëµã
+					Pline tempPline = starSignalling.getPline1();//å¾—åˆ°ä¿¡ä»¤å¯¹åº”çš„åŸºç«™çš„æœ€è¿‘çš„é‚£æ¡æ˜ å°„çš„è·¯æ®µ
+					Point2 startPoint = tempPline.getStartPoint();//è·å–è¿™æ¡è·¯çš„ä¸€ä¸ªç«¯ç‚¹
 					String direction;
 					if(Util.GetDistance(startPoint,starSignalling.getPoint())<Util.GetDistance(startPoint,endSignalling.getPoint()))
 					{
-						//Ö¤Ã÷ºÍµÀÂ·tempPlineÍ¬Ïò
+						//è¯æ˜å’Œé“è·¯tempPlineåŒå‘
 						direction = tempPline.getDirection();
 					}else
 					{
-						//Ö¤Ã÷ºÍµÀÂ·temPlline·´Ïò
-						direction = tempPline.getDirection().equals("0")?"1":"0";//È¡·´Ïò
+						//è¯æ˜å’Œé“è·¯temPllineåå‘
+						direction = tempPline.getDirection().equals("0")?"1":"0";//å–åå‘
 					}
-					if(countSignalling>=minSignalling && list.get(endIndex).getTimeStamp().getHours()-list.get(starIndex).getTimeStamp().getHours()<=timegap)//ÅĞ¶ÏÊÇ·ñÔÚÂ·ÉÏ£¬²»ÔÚÂ·ÉÏ¾Í²»´¦Àí
+					if(countSignalling>=minSignalling && list.get(endIndex).getTimeStamp().getHours()-list.get(starIndex).getTimeStamp().getHours()<=timegap)//åˆ¤æ–­æ˜¯å¦åœ¨è·¯ä¸Šï¼Œä¸åœ¨è·¯ä¸Šå°±ä¸å¤„ç†
 					{
 						for(int j=0;j<list.size();j++)
 						{
-							Signalling tempSig = mapSignalling.get(list.get(j).getCellID()+"#"+list.get(j).getLac());//µÃµ½¸ÃĞÅÁîËù¶ÔÓ¦µÄ»ùÕ¾
-							if(tempSig!=null)//È¥³ı¿ÕµÄ
+							Signalling tempSig = mapSignalling.get(list.get(j).getCellID()+"#"+list.get(j).getLac());//å¾—åˆ°è¯¥ä¿¡ä»¤æ‰€å¯¹åº”çš„åŸºç«™
+							if(tempSig!=null)//å»é™¤ç©ºçš„
 							{
-								Pline pl = tempSig.getPline1().getDirection().equals(direction)?tempSig.getPline1():tempSig.getPline2();//È¡³öÍ¬ÏòµÄÂ·¶Î
-								count(pl,i);//¸øplÕâ¶ÎÂ·¼ÓÒ»,¶ÔÓ¦µÄ¾ÍÊÇµÚi¸öĞ¡Ê±
+								Pline pl = tempSig.getPline1().getDirection().equals(direction)?tempSig.getPline1():tempSig.getPline2();//å–å‡ºåŒå‘çš„è·¯æ®µ
+								count(pl,i);//ç»™plè¿™æ®µè·¯åŠ ä¸€,å¯¹åº”çš„å°±æ˜¯ç¬¬iä¸ªå°æ—¶
 							}
 						}
 					}else
@@ -147,31 +147,31 @@ public class SignallingStatistics {
 					count++;
 				}
 			}
-			System.out.println("Í³¼Æ½áÊø");
-			System.out.println("¹ıÂËµÄÈËÊı£º"+count);
-			System.out.println("×ÜÈËÊı£º"+signallingStatistics.size());
-			System.out.println("±ÈÀı"+count/signallingStatistics.size());
-			System.out.println("´óÓÚ4¸öĞÅÁîÊı¾İÀïÃæ£¬ÓĞ"+empty+"¸öÊı¾İ²»¿ÉÓÃ£¡");
-			System.out.println("´óÓÚ4¸öĞÅÁîÊı¾İÀïÃæ£¬ÓĞ"+can+"¸öÊı¾İ¿ÉÓÃ£¡");
-			System.out.println("ÓĞ"+notOnRoad+"¸öÈË²»ÔÚÂ·ÉÏ");
+			System.out.println("ç»Ÿè®¡ç»“æŸ");
+			System.out.println("è¿‡æ»¤çš„äººæ•°ï¼š"+count);
+			System.out.println("æ€»äººæ•°ï¼š"+signallingStatistics.size());
+			System.out.println("æ¯”ä¾‹"+count/signallingStatistics.size());
+			System.out.println("å¤§äº4ä¸ªä¿¡ä»¤æ•°æ®é‡Œé¢ï¼Œæœ‰"+empty+"ä¸ªæ•°æ®ä¸å¯ç”¨ï¼");
+			System.out.println("å¤§äº4ä¸ªä¿¡ä»¤æ•°æ®é‡Œé¢ï¼Œæœ‰"+can+"ä¸ªæ•°æ®å¯ç”¨ï¼");
+			System.out.println("æœ‰"+notOnRoad+"ä¸ªäººä¸åœ¨è·¯ä¸Š");
 			signallingStatistics = new HashMap<>();
 		}
 	}
-	private static void count(Pline pl, int i) {//¸ø¶ÔÓ¦Â·¶Î¼ÆÊı
+	private static void count(Pline pl, int i) {//ç»™å¯¹åº”è·¯æ®µè®¡æ•°
 		ArrayList<Integer> list;
 		if(roadStatistics.get(pl.getRoadID())==null){
 			list = new ArrayList<>();
 		}else{
 			list = roadStatistics.get(pl.getRoadID());
 		}
-		for(int j=list.size();j<i+1;j++)//²»×ãµÄÎ»ÊıĞèÒª²¹×ã
+		for(int j=list.size();j<i+1;j++)//ä¸è¶³çš„ä½æ•°éœ€è¦è¡¥è¶³
 			list.add(0);
 		list.add(i, list.get(i)+1);
 		list.remove(i+1);
 		roadStatistics.put(pl.getRoadID(), list);
 	}
 	private static void sort() {
-		System.out.println("¿ªÊ¼ÅÅĞò");
+		System.out.println("å¼€å§‹æ’åº");
 		for (Iterator<String> iterator = roalSignalling.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			Pline pline = allRoad.get(key);
@@ -193,29 +193,29 @@ public class SignallingStatistics {
 				}
 				if(tempSig==null)
 				{
-					System.out.println("³ÌĞòÒì³£");
+					System.out.println("ç¨‹åºå¼‚å¸¸");
 					System.exit(0);
 				}
 				result.add(tempSig);
 				list.remove(tempSig);
 			}
 		}
-		System.out.println("ÅÅĞò½áÊø");
+		System.out.println("æ’åºç»“æŸ");
 	}
-	public static void matching()//½«ËùÓĞµÄ»ùÕ¾ºÍµÀÂ·½øĞĞÆ¥Åä
+	public static void matching()//å°†æ‰€æœ‰çš„åŸºç«™å’Œé“è·¯è¿›è¡ŒåŒ¹é…
 	{
-		System.out.println("¿ªÊ¼Æ¥Åä");
+		System.out.println("å¼€å§‹åŒ¹é…");
 		for(int i=0;i<allSignallings.size();i++)
 		{
 			Signalling signalling = allSignallings.get(i);
-			signalling.setPline1(getPlineBySig(signalling,false));//µÃµ½×î½üµÄÍ¶Ó°Â·¶Î
-			signalling.setPline2(getPlineBySig(signalling,true));//µÃµ½µ¹ÊıµÚ¶ş½üµÄÍ¶Ó°Â·¶Î
+			signalling.setPline1(getPlineBySig(signalling,false));//å¾—åˆ°æœ€è¿‘çš„æŠ•å½±è·¯æ®µ
+			signalling.setPline2(getPlineBySig(signalling,true));//å¾—åˆ°å€’æ•°ç¬¬äºŒè¿‘çš„æŠ•å½±è·¯æ®µ
 			mapSignalling.put(signalling.getCellId()+"#"+signalling.getLacId(), signalling);
 		}
-		System.out.println("»ùÕ¾Æ¥Åä½áÊø");
+		System.out.println("åŸºç«™åŒ¹é…ç»“æŸ");
 	}
 	/*
-	 * flag = true ´ú±íÕÒµ½ÀëËûµÚ¶ş½üµÄÂ·
+	 * flag = true ä»£è¡¨æ‰¾åˆ°ç¦»ä»–ç¬¬äºŒè¿‘çš„è·¯
 	 */
 	private static Pline getPlineBySig(Signalling signalling,boolean flag) {
 		Pline tempPline = null;
@@ -232,9 +232,9 @@ public class SignallingStatistics {
 			if(projectivePoint.getX()>plines.get(i).getStartPoint().getX() && projectivePoint.getX()<plines.get(i).getEndPoint().getX()
 					|| projectivePoint.getX()>plines.get(i).getEndPoint().getX() && projectivePoint.getX()<plines.get(i).getStartPoint().getX())
 			{
-				if((Util.GetDistance(projectivePoint, signalling.getPoint())/1000)<curDis)//¼ÓÉÏ¾àÀëÔ¼Êø
+				if((Util.GetDistance(projectivePoint, signalling.getPoint())/1000)<curDis)//åŠ ä¸Šè·ç¦»çº¦æŸ
 				{
-					if(flag)//´ú±íÑ°ÕÒÁíÒ»±ßµÄµÀÂ·
+					if(flag)//ä»£è¡¨å¯»æ‰¾å¦ä¸€è¾¹çš„é“è·¯
 					{
 						if(!plines.get(i).getRoadID().equals(signalling.getPline1().getRoadID()))
 						{
@@ -249,7 +249,7 @@ public class SignallingStatistics {
 				}
 			}
 		}
-		if(tempPline==null)//ÕÒÒ»¸ö×î½üµÄÏß¶Î
+		if(tempPline==null)//æ‰¾ä¸€ä¸ªæœ€è¿‘çš„çº¿æ®µ
 		{
 			curDis=Double.MAX_VALUE;
 			for(int i=0;i<plines.size();i++)
@@ -277,9 +277,9 @@ public class SignallingStatistics {
 		return tempPline;
 	}
 
-	public static void dealSignallingToRoad()//½«ËùÓĞµÄ»ùÕ¾¶ÁÈ¡¼ÓÈëÁĞ±í
+	public static void dealSignallingToRoad()//å°†æ‰€æœ‰çš„åŸºç«™è¯»å–åŠ å…¥åˆ—è¡¨
 	{
-		System.out.println("¶ÁÈ¡»ùÕ¾Êı¾İ");
+		System.out.println("è¯»å–åŸºç«™æ•°æ®");
 		FileUtil fileUtil = new FileUtil("cellInfo-201510.txt");
 		String cellInfo = fileUtil.readLine();
 		while(cellInfo!=null)
@@ -289,7 +289,7 @@ public class SignallingStatistics {
 				allSignallings.add(signalling);
 			cellInfo = fileUtil.readLine();
 		}
-		System.out.println("¶ÁÈ¡½áÊø");
+		System.out.println("è¯»å–ç»“æŸ");
 	}
 	private static void getAllRoad() {
 		for(int i=0;i<HandleData.roads.length;i++)

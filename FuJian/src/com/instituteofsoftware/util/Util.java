@@ -14,10 +14,10 @@ import com.instituteofsoftware.bean.Point2;
 public class Util {
 	private static final double EARTH_RADIUS = 6378137;
 	/**
-	 * ÊäÈëÁ½¸öGPSµã£¨¾­¶È£¬Î³¶È£©£¬¼ÆËãËüÃÇÖ®¼äµÄ¾àÀë
-	 * @param startÆğµã
-	 * @param end ÖÕµã
-	 * @return ·µ»Ø¾àÀë
+	 * è¾“å…¥ä¸¤ä¸ªGPSç‚¹ï¼ˆç»åº¦ï¼Œçº¬åº¦ï¼‰ï¼Œè®¡ç®—å®ƒä»¬ä¹‹é—´çš„è·ç¦»
+	 * @param startèµ·ç‚¹
+	 * @param end ç»ˆç‚¹
+	 * @return è¿”å›è·ç¦»
 	 */
 	
 	private static double rad(double d)
@@ -37,11 +37,11 @@ public class Util {
 		return s;
 	}
 	/*
-	 * Õâ¸ö¹«Ê½µÃ³öµÄ¾àÀëÊÇ°´Ã×¼ÆËã
+	 * è¿™ä¸ªå…¬å¼å¾—å‡ºçš„è·ç¦»æ˜¯æŒ‰ç±³è®¡ç®—
 	 */
 	public static double GetDistance(Point2 pointStar,Point2 pointEnd)
 	{
-		//longitude ¾­¶È x;  latitude Î³¶È y;
+		//longitude ç»åº¦ x;  latitude çº¬åº¦ y;
 		double lng1=0, lat1=0,  lng2=0, lat2=0;
 		lng1 = pointStar.getX();
 		lat1 = pointStar.getY();
@@ -58,7 +58,7 @@ public class Util {
 		return s;
 	}
 
-	//»ñÈ¡µãÔÚÏßÉÏµÄÍ¶Ó°µã
+	//è·å–ç‚¹åœ¨çº¿ä¸Šçš„æŠ•å½±ç‚¹
 	public static Point2 getProjPoint(Pline pline, Point2 point) {
 		Point2 p0 = new Point2();
 		Point2 p1 = pline.getStartPoint();
@@ -75,8 +75,8 @@ public class Util {
 	
 	
 	public static String getCurTime() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//ÉèÖÃÈÕÆÚ¸ñÊ½
-		return df.format(new Date());// new Date()Îª»ñÈ¡µ±Ç°ÏµÍ³Ê±¼ä
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//è®¾ç½®æ—¥æœŸæ ¼å¼
+		return df.format(new Date());// new Date()ä¸ºè·å–å½“å‰ç³»ç»Ÿæ—¶é—´
 
 	}
 	public static Date getDateByString(String trmp)
@@ -92,7 +92,7 @@ public class Util {
 	}
 	public static void createFile(String fileName) {
 		File ceateFile =new File(fileName);    
-		//Èç¹ûÎÄ¼ş¼Ğ²»´æÔÚÔò´´½¨    
+		//å¦‚æœæ–‡ä»¶å¤¹ä¸å­˜åœ¨åˆ™åˆ›å»º    
 		if(!ceateFile.exists())      
 		{
 		    try {
@@ -113,7 +113,7 @@ public class Util {
 //			
 //			if(ConfigurationFiles.ISCREATELOG)
 //			{
-//				processFileName.createNewFile();//´´½¨ÈÕÖ¾ÎÄ¼ş
+//				processFileName.createNewFile();//åˆ›å»ºæ—¥å¿—æ–‡ä»¶
 //			}
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
@@ -124,7 +124,7 @@ public class Util {
 	
 	
 	
-	//ÏòÒ»¸öÎÄ¼ş×·¼ÓÄÚÈİ
+	//å‘ä¸€ä¸ªæ–‡ä»¶è¿½åŠ å†…å®¹
 	public static void appendMethodB(String fileName, String content,boolean flag) {
 		if(!flag)
 		{
@@ -132,7 +132,7 @@ public class Util {
 		}
 		System.out.println(content);
 		try {  
-			//´ò¿ªÒ»¸öĞ´ÎÄ¼şÆ÷£¬¹¹Ôìº¯ÊıÖĞµÄµÚ¶ş¸ö²ÎÊıtrue±íÊ¾ÒÔ×·¼ÓĞÎÊ½Ğ´ÎÄ¼ş  
+			//æ‰“å¼€ä¸€ä¸ªå†™æ–‡ä»¶å™¨ï¼Œæ„é€ å‡½æ•°ä¸­çš„ç¬¬äºŒä¸ªå‚æ•°trueè¡¨ç¤ºä»¥è¿½åŠ å½¢å¼å†™æ–‡ä»¶  
 			FileWriter writer = new FileWriter(fileName, true);  
 			writer.write(content+"\n");  
 			writer.close();  

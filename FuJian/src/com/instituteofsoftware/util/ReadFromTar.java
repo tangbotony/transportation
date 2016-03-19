@@ -9,20 +9,21 @@ public class ReadFromTar {
 
 	public static void main(String[] args) {
 		//F:\Data\20151125
-//		unpressData("20151125");
+		unpressData("20151112");
 	}
 	public static long lastT = 0;
 	public static int lineNum = 12;
 	public static String unzippath ;
 	public static String TransportFtp;
 	/**
-	 * »ñÈ¡lastTµ½App.TÖ®¼äµÄËùÓĞÊı¾İ
+	 * è·å–lastTåˆ°App.Tä¹‹é—´çš„æ‰€æœ‰æ•°æ®
 	 * @return
 	 */
 	public static void unpressData(String day) {
-		//F:\Data\20151112
-		TransportFtp = "F:\\Data\\"+day+"\\";
-		unzippath = "F:\\Data\\unzip\\"+day+"\\";
+		//F:\Data\20151112   /Users/tangbo/Study/exp
+		TransportFtp = "/Users/tangbo/Study/exp/"+day+"/";
+		System.out.println(TransportFtp);
+		unzippath = "/Users/tangbo/Study/exp/unzip/"+day+"/";
 		File f = new File(unzippath);
 		if(!f.exists())f.mkdirs();
 		lastT = TimeFormat.parse(day+" 00:00:00").getTime()/1000;
@@ -51,7 +52,7 @@ public class ReadFromTar {
 		}
 	}
 	public static ArrayList<String> unpressData(String day,String star,String end) {
-		unzippath = "F:\\Data\\unzip\\"+day+"\\";
+		unzippath = "/Users/tangbo/Study/exp/unzip/"+day+"/";
 		ArrayList<String> result = new ArrayList<>();
 		System.out.println(day+" "+star+":00:00");
 		lastT = TimeFormat.parse(day+" "+star+":00:00").getTime()/1000;

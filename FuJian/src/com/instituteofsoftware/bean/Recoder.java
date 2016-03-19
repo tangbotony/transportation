@@ -6,29 +6,29 @@ import com.instituteofsoftware.util.Util;
 
 public class Recoder {
 	public String roadID;//G70
-	public String coilID; //ÏßÈ¦ID
-    public String status; //Éè±¸×´Ì¬£¬0Õı³£¡¢ÆäËûÒì³£
-    public int forward1; //Ò»Àà³µÕıÏòÁ÷Á¿
-    public int reverse1; //Ò»Àà³µÄæÏòÁ÷Á¿
-    public String avgSpeed1; //Ò»Àà³µÆ½¾ùËÙ¶È
-    public String occupancy1; //Ò»Àà³µÊ±¼äÕ¼ÓĞÂÊ
-    public int forward2; //¶şÀà³µ¡­¡­
+	public String coilID; //çº¿åœˆID
+    public String status; //è®¾å¤‡çŠ¶æ€ï¼Œ0æ­£å¸¸ã€å…¶ä»–å¼‚å¸¸
+    public int forward1; //ä¸€ç±»è½¦æ­£å‘æµé‡
+    public int reverse1; //ä¸€ç±»è½¦é€†å‘æµé‡
+    public String avgSpeed1; //ä¸€ç±»è½¦å¹³å‡é€Ÿåº¦
+    public String occupancy1; //ä¸€ç±»è½¦æ—¶é—´å æœ‰ç‡
+    public int forward2; //äºŒç±»è½¦â€¦â€¦
     public int reverse2;
     public String avgSpeed2;
     public String occupancy2;
-    public int forward3; //ÈıÀà³µ¡­¡­
+    public int forward3; //ä¸‰ç±»è½¦â€¦â€¦
     public int reverse3;
     public String avgSpeed3;
     public String occupancy3;
-    public int forward4; //ËÄÀà³µ¡­¡­
+    public int forward4; //å››ç±»è½¦â€¦â€¦
     public int reverse4;
     public String avgSpeed4;
     public String occupancy4;
-    public int forward5; //ÎåÀà³µ¡­¡­
+    public int forward5; //äº”ç±»è½¦â€¦â€¦
     public int reverse5;
     public String avgSpeed5;
     public String occupancy5;
-    public Date gatherTime;//²É¼¯Ê±¼ä
+    public Date gatherTime;//é‡‡é›†æ—¶é—´
 	public Recoder(String recoder) {
 		String recoders[] = recoder.split("\t");
 		this.roadID = recoders[0];

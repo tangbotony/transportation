@@ -50,14 +50,14 @@ public class Output2File {
 		
 	}
 	private static void predict() {
-		System.out.println("¿ªÊ¼Ô¤²â£º");
+		System.out.println("å¼€å§‹é¢„æµ‹ï¼š");
 		StringBuffer re = new StringBuffer();
 		StringBuffer empty = new StringBuffer();
 		ArrayList<Integer> staticFlow=null;
 		ArrayList<Integer> relativelyFlow=null;
-		for(String key : SignallingStatistics.allRoad.keySet())//È¡³öËùÓĞµÄµÀÂ·
+		for(String key : SignallingStatistics.allRoad.keySet())//å–å‡ºæ‰€æœ‰çš„é“è·¯
 		{
-			if(mapPline.get(key) != null)//Ö¤Ã÷ÕâÌõÂ·¶Î²»ĞèÒªÔ¤²â
+			if(mapPline.get(key) != null)//è¯æ˜è¿™æ¡è·¯æ®µä¸éœ€è¦é¢„æµ‹
 				continue;
 			relativelyFlow = SignallingStatistics.roadStatistics.get(key);
 			if(relativelyFlow!=null)
@@ -82,11 +82,11 @@ public class Output2File {
 		}
 		Util.write2File("empty.txt", empty.toString());
 		Util.write2File("predict.txt", re.toString());
-		System.out.println("Ô¤²â½áÊø");
-		System.out.println("Ô¤²âµÀÂ·Êı£º"+predictRoad.size());
-		System.out.println("Ïà¶ÔÁ÷Á¿µÄµÀÂ·Êı£º"+SignallingStatistics.roadStatistics.size());
+		System.out.println("é¢„æµ‹ç»“æŸ");
+		System.out.println("é¢„æµ‹é“è·¯æ•°ï¼š"+predictRoad.size());
+		System.out.println("ç›¸å¯¹æµé‡çš„é“è·¯æ•°ï¼š"+SignallingStatistics.roadStatistics.size());
 	}
-	//Ìí¼ÓÔ¤²âÁ÷Á¿
+	//æ·»åŠ é¢„æµ‹æµé‡
 	private static ArrayList<Integer> getFlow(Pline pline, ArrayList<Integer> relativelyFlow,
 			ArrayList<Integer> staticFlow,boolean isSecond) {
 		if(pline==null)
@@ -94,7 +94,7 @@ public class Output2File {
 		double a = pline.getA();
 		double b = pline.getB();
 		ArrayList<Integer> result = new ArrayList<>();
-		System.out.println("»Ö¸´º¯Êı:"+"y = " + a + " * x + " + b);
+		System.out.println("æ¢å¤å‡½æ•°:"+"y = " + a + " * x + " + b);
 		for(int i=0;i<relativelyFlow.size();i++)
 		{
 			double pre = relativelyFlow.get(i)*a+b;
@@ -108,7 +108,7 @@ public class Output2File {
 		ArrayList<Pline> roadPline = HandleData.allRoadInformation.get(road);
 		for(int i=0;i<roadPline.size();i++)
 		{
-			if(roadPline.get(i).getRoadID().equals(key))//ÕÒµ½£¬¿ªÊ¼»ØËİ
+			if(roadPline.get(i).getRoadID().equals(key))//æ‰¾åˆ°ï¼Œå¼€å§‹å›æº¯
 			{
 				for(int j=i+1;j<roadPline.size();j++)
 				{
@@ -129,7 +129,7 @@ public class Output2File {
 		ArrayList<Pline> roadPline = HandleData.allRoadInformation.get(road);
 		for(int i=0;i<roadPline.size();i++)
 		{
-			if(roadPline.get(i).getRoadID().equals(key))//ÕÒµ½£¬¿ªÊ¼»ØËİ
+			if(roadPline.get(i).getRoadID().equals(key))//æ‰¾åˆ°ï¼Œå¼€å§‹å›æº¯
 			{
 				for(int j=i-1;j>=0;j--)
 				{
@@ -155,10 +155,10 @@ public class Output2File {
 			sumy += y.get(n);
 			n++;
 		}
-		// ÇóÆ½¾ùÊı
+		// æ±‚å¹³å‡æ•°
 		double xbar = sumx / n;
 		double ybar = sumy / n;
-		// ¼ÆËãÏµÊı
+		// è®¡ç®—ç³»æ•°
 		@SuppressWarnings("unused")
 		double xxbar = 0.0, yybar = 0.0, xybar = 0.0;
 		for (int i = 0; i < n; i++) {

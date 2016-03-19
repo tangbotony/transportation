@@ -94,9 +94,10 @@ public class Pline {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return roadID+"\t"+startNILink+"\t"+endNILink+"\t"+direction+"\t"+dis+"\t"+startPoint.toString()+"\t"+endPoint.toString()+"\t"+containNILink;
+		//return roadID+"\t"+startNILink+"\t"+endNILink+"\t"+direction+"\t"+dis+"\t"+startPoint.toString()+"\t"+endPoint.toString()+"\t"+containNILink;
 		//		return containNILink;
 		//return startPoint.toString()+"\t"+endPoint.toString();
 		//return startNILink+"\t"+endNILink+"\t"+dis+"";
+		return roadID+"\t"+startPoint.toString()+"\t"+endPoint.toString()+"\t"+forward;
 	}
 }

@@ -15,7 +15,7 @@ import com.instituteofsoftware.util.Util;
 public class StatisticsData {
 	public static void statis()
 	{
-		System.out.println("¿ªÊ¼Í³¼Æ");
+		System.out.println("å¼€å§‹ç»Ÿè®¡");
 		String fileName = HandleData.recoderFileName;
 		FileUtil fileUtil = new FileUtil(fileName);
 		Date baseDate = getBaseDateByFileName(fileName);
@@ -25,7 +25,7 @@ public class StatisticsData {
 		while(temp != null)
 		{
 			Recoder recoder = new Recoder(temp);
-			if(!recoder.status.equals("0"))//Êı¾İ²»¿ÉÓÃ
+			if(!recoder.status.equals("0"))//æ•°æ®ä¸å¯ç”¨
 			{
 				noUse.append(temp);
 				noUse.append("\n");
@@ -60,7 +60,7 @@ public class StatisticsData {
 						reverse.add(count,reverse.get(count)+revCars);
 						reverse.remove(count+1);
 						vehicleInsp.setReverse(reverse);
-						vehicles.add(i,vehicleInsp);//°Ñ¸ü¸ÄºóµÄÊı¾İ¼ÓÈëµ½Ô­À´µÄÊı×éÖĞ£¬È»ºóÔÚÒÆ³ı¶àÓàµÄ
+						vehicles.add(i,vehicleInsp);//æŠŠæ›´æ”¹åçš„æ•°æ®åŠ å…¥åˆ°åŸæ¥çš„æ•°ç»„ä¸­ï¼Œç„¶ååœ¨ç§»é™¤å¤šä½™çš„
 						vehicles.remove(i++);
 					}
 				}
@@ -76,9 +76,9 @@ public class StatisticsData {
 			}
 			temp = fileUtil.readLine();
 		}
-		for(int i=0;i<HandleData.roads.length;i++)//°ÑÍ¬Ò»ÌõÂ·ÉÏµÄ³µ¼ìÆ÷¼ì²âµÄÊı¾İºÏ²¢
+		for(int i=0;i<HandleData.roads.length;i++)//æŠŠåŒä¸€æ¡è·¯ä¸Šçš„è½¦æ£€å™¨æ£€æµ‹çš„æ•°æ®åˆå¹¶
 		{
-			ArrayList<VehicleInsp> tempVehicleInsp = HandleData.allVehicleInsps.get(HandleData.roads[i]);//ÄÃµ½¶ÔÓ¦µÀÂ·ÉÏµÄ³µ¼ìÆ÷
+			ArrayList<VehicleInsp> tempVehicleInsp = HandleData.allVehicleInsps.get(HandleData.roads[i]);//æ‹¿åˆ°å¯¹åº”é“è·¯ä¸Šçš„è½¦æ£€å™¨
 			for(int j=0;j<tempVehicleInsp.size();j++)
 			{
 				VehicleInsp temp1 = tempVehicleInsp.get(j);
@@ -112,8 +112,7 @@ public class StatisticsData {
 			zero =zero+(count+1)-temp1.size();
 			System.out.println(HandleData.staticFlow.get(type).getRoadID()+"\t"+zero+"\t"+HandleData.staticFlow.get(type).getStartPoint()+"\t"+HandleData.staticFlow.get(type).getEndPoint()+"\t"+HandleData.staticFlow.get(type).getForward());
 		}
-		System.out.println("µÀÂ·ÌõÊı:"+HandleData.staticFlow.size()+";µÀÂ·Îª¿ÕµÄÌõÊı:"+countZero);
-		
+		System.out.println("é“è·¯æ¡æ•°:"+HandleData.staticFlow.size()+";é“è·¯ä¸ºç©ºçš„æ¡æ•°:"+countZero);
 		Util.write2File("nouse.txt", noUse.toString());
 	}
 	private static ArrayList<Integer> merge(ArrayList<Integer> staticFlow1, ArrayList<Integer> staticFlow2) {

@@ -7,12 +7,12 @@ public class ConfigurationFiles {
 	public static final double AVERAGE=0;
 	public static final double VARIANCE = 20;
 	public static final String IPADDRESS = "133.133.134.98";
-	public static final double PRECISION = 1.0E-6;//Çó½âÍ¶Ó°µÄÊ±ºòÓÃ
-	public static final int GAP = 1;//¶¨ÒåÁ½¸öµãµÄ¼ä¸ô£¬ÓÃÓÚ²éÕÒÍ¶Ó°µãÊ±ºòÓÃµÄ±äÁ¿
-	public static final int LIMIT = 3;//¶¨Òå²éÕÒºòÑ¡µãÊÇ×î¶à¿ÉÒÔ²éµ½µÄ¹«Â·
+	public static final double PRECISION = 1.0E-6;//æ±‚è§£æŠ•å½±çš„æ—¶å€™ç”¨
+	public static final int GAP = 1;//å®šä¹‰ä¸¤ä¸ªç‚¹çš„é—´éš”ï¼Œç”¨äºæŸ¥æ‰¾æŠ•å½±ç‚¹æ—¶å€™ç”¨çš„å˜é‡
+	public static final int LIMIT = 3;//å®šä¹‰æŸ¥æ‰¾å€™é€‰ç‚¹æ˜¯æœ€å¤šå¯ä»¥æŸ¥åˆ°çš„å…¬è·¯
 	
 	public static final int MONGODBPORT = 27017;
-	public static final int FILESIZE = 6392;//¸ÃÖµÊÇÔÚ´¦ÀíÔ­Ê¼GPSÊı¾İÊ±¶¨ÒåµÄÎÄ¼ş´óĞ¡£¬Èç¹ûÎÄ¼şĞ¡ÓÚÕâ¸öÖµ£¬Ôò²»ĞèÒª´¦Àí 6K
+	public static final int FILESIZE = 6392;//è¯¥å€¼æ˜¯åœ¨å¤„ç†åŸå§‹GPSæ•°æ®æ—¶å®šä¹‰çš„æ–‡ä»¶å¤§å°ï¼Œå¦‚æœæ–‡ä»¶å°äºè¿™ä¸ªå€¼ï¼Œåˆ™ä¸éœ€è¦å¤„ç† 6K
 	public static MongoDB4CRUD mongoDB4CRUDTaxiInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "fujian", "oldRoadInformation");
 	//roadInformation
 	public static MongoDB4CRUD mongoDB4CRUDRoadInformation = new MongoDB4CRUD(ConfigurationFiles.IPADDRESS, ConfigurationFiles.MONGODBPORT, "fujian", "roadInformation");

@@ -15,15 +15,15 @@ import com.instituteofsoftware.util.Util;
 
 public class HandleData {
 	public static String fileDate="20151112";
-	public static String filePath="F:/Data/unzip/"+fileDate+"/";
+	public static String filePath="/Users/tangbo/Study/exp/unzip/"+fileDate+"/";
 	public static String recoderFileName=fileDate+".txt";
 	public static int countSize = 0;
 	public static int timeGap = 60;
 	public static Map<String, List<Point2>> map = new HashMap<String, List<Point2>>();// ring road;
 	public static Map<String, List<Point2>> ringRoadMap = new HashMap<String, List<Point2>>();
 	public static Map<String, Boolean> ringRoadPoint = new HashMap<String, Boolean>();
-	public static Map<String, ArrayList<Pline>> allRoadInformation = new HashMap<String, ArrayList<Pline>>();//´æ·ÅÃ¿Ò»ÌõÂ·µÄËùÓĞĞÅÏ¢, key:G70
-	public static Map<String, ArrayList<VehicleInsp>> allVehicleInsps = new HashMap<String, ArrayList<VehicleInsp>>();//´æ·ÅÃ¿Ò»ÌõÂ·µÄ³µ¼ìÆ÷
+	public static Map<String, ArrayList<Pline>> allRoadInformation = new HashMap<String, ArrayList<Pline>>();//å­˜æ”¾æ¯ä¸€æ¡è·¯çš„æ‰€æœ‰ä¿¡æ¯, key:G70
+	public static Map<String, ArrayList<VehicleInsp>> allVehicleInsps = new HashMap<String, ArrayList<VehicleInsp>>();//å­˜æ”¾æ¯ä¸€æ¡è·¯çš„è½¦æ£€å™¨
 	public static Map<String, Pline> staticFlow = new HashMap<String,Pline>();//key: G70#starID#endID
 	public static StringBuffer error = new StringBuffer();
 	public static double maxDis = 4;
@@ -33,21 +33,22 @@ public class HandleData {
 	
 	public static void main(String[] args) {
 		isRecoder = false;
-		getLinkGPS(map,"Rfujian.mif","Rfujian.mid");//¶ÁÈ¡Õı³£µÄµÀÂ·
+		getLinkGPS(map,"Rfujian.mif","Rfujian.mid");//è¯»å–æ­£å¸¸çš„é“è·¯
 		isRecoder = true;
-		getLinkGPS(ringRoadMap,"fujian_ic&jct.MIF","fujian_ic&jct.MID");//¶ÁÈ¡ÔÑµÀ
+		getLinkGPS(ringRoadMap,"fujian_ic&jct.MIF","fujian_ic&jct.MID");//è¯»å–åŒé“
 		isRecoder = false;
 		for(int i=0;i<files.length;i++)
 		{
-			System.out.println("µÚ"+(i+1)+"¸öÎÄ¼ş");
+			System.out.println("ç¬¬"+(i+1)+"ä¸ªæ–‡ä»¶");
 			getNewRoadSE(files[i]);
 //			divideRoad(files[i]);
 		}
 		divideVehicleInspection();
-//		Util.write2File("err.txt", error.toString())£»
+//		Util.write2File("err.txt", error.toString())ï¼›
 		StatisticsData.statis();
 		SignallingStatistics.signallingStatistics();
 		Output2File.wirte();
+		CreateUIData.exportData();
 	}
 	
 	private static void divideVehicleInspection() {
@@ -63,13 +64,13 @@ public class HandleData {
 			vel.setPline(getPlineBy(vel,false));
 			if(vel.getPline()!=null)
 			{
-				if(vel.getChannel().equals("1") || vel.getChannel().equals("3") || vel.getChannel().equals("5") || vel.getChannel().equals("7"))//´ú±íµÄÊÇÕı·½Ïò
+				if(vel.getChannel().equals("1") || vel.getChannel().equals("3") || vel.getChannel().equals("5") || vel.getChannel().equals("7"))//ä»£è¡¨çš„æ˜¯æ­£æ–¹å‘
 				{
 					if(!vel.getPline().getDirection().equals("0"))
 					{
 						Pline pline1 =getPlineBy(vel,true);
 						if(pline1!=null)
-							vel.setPline(pline1);//»ñÈ¡¶ÔÃæµÄµÀÂ·À´×÷ÎªÍ¶Ó°Â·¶Î
+							vel.setPline(pline1);//è·å–å¯¹é¢çš„é“è·¯æ¥ä½œä¸ºæŠ•å½±è·¯æ®µ
 					}
 				}else
 				{
@@ -85,7 +86,7 @@ public class HandleData {
 				buffer.append(vel.toString());
 				buffer.append("\n");
 			}
-//			vel.setPline2(getPlineBy(vel,true));²éÅĞ¶Ï
+//			vel.setPline2(getPlineBy(vel,true));æŸ¥åˆ¤æ–­
 			if(vel.getPline()==null)
 			{
 				error.append(vel);
@@ -97,7 +98,7 @@ public class HandleData {
 	}
 
 	private static Pline getPlineBy(VehicleInsp vel,boolean flag) {
-		if(flag == true && vel.getPline()==null)//´ú±íµÚÒ»´ÎµÀÂ·Æ¥ÅäÎª¿Õ£¬µÚ¶ş´Î²»ĞèÒªÔÚ½øĞĞÆ¥Åä
+		if(flag == true && vel.getPline()==null)//ä»£è¡¨ç¬¬ä¸€æ¬¡é“è·¯åŒ¹é…ä¸ºç©ºï¼Œç¬¬äºŒæ¬¡ä¸éœ€è¦åœ¨è¿›è¡ŒåŒ¹é…
 			return null;
 		Pline tempPline = null;
 		ArrayList<Pline> plines = allRoadInformation.get(vel.getRoadLine());
@@ -113,9 +114,9 @@ public class HandleData {
 			if(projectivePoint.getX()>plines.get(i).getStartPoint().getX() && projectivePoint.getX()<plines.get(i).getEndPoint().getX()
 					|| projectivePoint.getX()>plines.get(i).getEndPoint().getX() && projectivePoint.getX()<plines.get(i).getStartPoint().getX())
 			{
-				if((Util.GetDistance(projectivePoint, vel.getGpsPoint())/1000)<curDis)//¼ÓÉÏ¾àÀëÔ¼Êø
+				if((Util.GetDistance(projectivePoint, vel.getGpsPoint())/1000)<curDis)//åŠ ä¸Šè·ç¦»çº¦æŸ
 				{
-					if(flag)//´ú±íÑ°ÕÒÁíÒ»±ßµÄµÀÂ·
+					if(flag)//ä»£è¡¨å¯»æ‰¾å¦ä¸€è¾¹çš„é“è·¯
 					{
 						if(!plines.get(i).getRoadID().equals(vel.getPline().getRoadID()))
 						{
@@ -130,7 +131,7 @@ public class HandleData {
 				}
 			}
 		}
-		if( !flag && curDis>maxDis)//µÚ¶şÌõÏß²»ĞèÒª¼ÓÈë¾àÀëÅĞ¶Ï£¬³ÌĞòÄÜ¹»ÔËĞĞµ½Õâ£¬Ö¤Ã÷µÚÒ»ÌõÄÜ¹»Æ¥Åä
+		if( !flag && curDis>maxDis)//ç¬¬äºŒæ¡çº¿ä¸éœ€è¦åŠ å…¥è·ç¦»åˆ¤æ–­ï¼Œç¨‹åºèƒ½å¤Ÿè¿è¡Œåˆ°è¿™ï¼Œè¯æ˜ç¬¬ä¸€æ¡èƒ½å¤ŸåŒ¹é…
 		{
 			tempPline=null;
 		}
@@ -140,7 +141,7 @@ public class HandleData {
 	
 
 	/**
-	 * ¶ÁÈ¡Ò»¸ömifÎÄ¼şÖĞÏÂÒ»¸öNILinkµÄÏêÏ¸gpsµã£¬ÓĞĞ§µÄ±£´æÔÚroadGPSÖĞ
+	 * è¯»å–ä¸€ä¸ªmifæ–‡ä»¶ä¸­ä¸‹ä¸€ä¸ªNILinkçš„è¯¦ç»†gpsç‚¹ï¼Œæœ‰æ•ˆçš„ä¿å­˜åœ¨roadGPSä¸­
 	 * @param fin
 	 */
 	private static List<Point2> readMif(FileUtil fin){
@@ -171,7 +172,7 @@ public class HandleData {
 		return gps;
 	}
 	/*
-	 * ½«mifÎÄ¼şºÍmidÎÄ¼şÁªÏµÆğÀ´
+	 * å°†mifæ–‡ä»¶å’Œmidæ–‡ä»¶è”ç³»èµ·æ¥
 	 */
 	private static void getLinkGPS(Map<String, List<Point2>> map,String mif,String mid){
 		FileUtil mifin = new FileUtil(mif);
@@ -195,22 +196,22 @@ public class HandleData {
 		String temp = road.readLine();
 		int currentDirection = -1;
 		System.out.println(ringRoadPoint.size());
-		System.out.println("¿ªÊ¼£¡£¡£¡£¡£¡£¡£¡£¡");
+		System.out.println("å¼€å§‹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼");
 		while(temp!=null)
 		{
 			String line[] = temp.split("	");
 			if(currentDirection == -1)
 				currentDirection = Integer.parseInt(line[1]);
-			else if(currentDirection != Integer.parseInt(line[1]))//ÅĞ¶ÏÊÇ·ñ»»·½Ïò
+			else if(currentDirection != Integer.parseInt(line[1]))//åˆ¤æ–­æ˜¯å¦æ¢æ–¹å‘
 			{
-				System.out.println("»»Ïò###############");
+				System.out.println("æ¢å‘###############");
 				if(!tempRoad.equals(""))
 				{
-					newRoad.put(index, tempRoad);//°ÑÖ®Ç°µÄ¼ÓÈë£¬¿ªÊ¼ĞÂµÄ·½Ïò
-					index++;//ÖØĞÂ¿ªÊ¼
+					newRoad.put(index, tempRoad);//æŠŠä¹‹å‰çš„åŠ å…¥ï¼Œå¼€å§‹æ–°çš„æ–¹å‘
+					index++;//é‡æ–°å¼€å§‹
 					tempRoad = "";
 				}
-				currentDirection = Integer.parseInt(line[1]);//¼ÇÂ¼ĞÂµÄ·½Ïò
+				currentDirection = Integer.parseInt(line[1]);//è®°å½•æ–°çš„æ–¹å‘
 			}
 			if(tempRoad.equals(""))
 				tempRoad = line[0];
@@ -265,7 +266,7 @@ public class HandleData {
 	}
 	
 	/*
-	 * »ñÈ¡ĞÂ»®·ÖµÄÂ·µÄÆğµãºÍÖÕµã
+	 * è·å–æ–°åˆ’åˆ†çš„è·¯çš„èµ·ç‚¹å’Œç»ˆç‚¹
 	 */
 	public static ArrayList<Pline> getNewRoadSE(String fileName)
 	{
@@ -288,7 +289,7 @@ public class HandleData {
 				tempPline.setContainNILink(lineInformation[0]);
 			}else
 			{
-				if(!lineInformation[1].equals(tempPline.getDirection()))//»»Ïò
+				if(!lineInformation[1].equals(tempPline.getDirection()))//æ¢å‘
 				{
 					String befor[] = beforPline.split("\t");
 					tempPline.setEndNILink(befor[0]);
@@ -299,7 +300,7 @@ public class HandleData {
 					continue;
 				}else
 				{
-					if(ringRoadPoint.get(lineInformation[5]+"#"+lineInformation[6])==null)//ÅĞ¶ÏÊÇ²»ÊÇ·Ö¸îµã
+					if(ringRoadPoint.get(lineInformation[5]+"#"+lineInformation[6])==null)//åˆ¤æ–­æ˜¯ä¸æ˜¯åˆ†å‰²ç‚¹
 					{
 						tempPline.setDis(Double.parseDouble(lineInformation[2])+tempPline.getDis());
 						tempPline.setContainNILink(tempPline.getContainNILink()+"\t"+lineInformation[0]);

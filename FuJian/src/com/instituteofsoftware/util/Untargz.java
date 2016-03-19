@@ -14,7 +14,7 @@ import org.kamranzafar.jtar.TarInputStream;
 
 /**
  * 
- * @author Jason Li 2014-5 ²»ÔÙ°ÑÎÄ¼ş¶¼½âÑ¹³öÀ´£¬È«²¿ÔÚ²Ù×÷Êı¾İÁ÷
+ * @author Jason Li 2014-5 ä¸å†æŠŠæ–‡ä»¶éƒ½è§£å‹å‡ºæ¥ï¼Œå…¨éƒ¨åœ¨æ“ä½œæ•°æ®æµ
  */
 public class Untargz {
 

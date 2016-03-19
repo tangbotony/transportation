@@ -49,7 +49,7 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	//¶ÁÈ¡ÎÄ¼ş£¬Ò»´Î¶ÁÒ»ĞĞ
+	//è¯»å–æ–‡ä»¶ï¼Œä¸€æ¬¡è¯»ä¸€è¡Œ
 	public String readLine(){
 		if(this.reader == null){
 			try {
@@ -86,7 +86,7 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	//ÏòÎÄ¼şÖĞĞ´Èë¶ÔÏó
+	//å‘æ–‡ä»¶ä¸­å†™å…¥å¯¹è±¡
 	public void writeObj(Object obj){
 		try {
 			this.objOut = new ObjectOutputStream(new FileOutputStream(this.fileName));
@@ -101,7 +101,7 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	//´ÓÎÄ¼şÖĞ¶ÁÈ¡¶ÔÏó
+	//ä»æ–‡ä»¶ä¸­è¯»å–å¯¹è±¡
 	public Object readObj(){
 		Object obj = null;
 		try {
